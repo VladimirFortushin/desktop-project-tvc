@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fortushin.tvc.javaFx.TableController">
+    <Pane prefHeight="57.0" prefWidth="800.0">
+        <Label fx:id="searchLabel" layoutX="14.0" layoutY="20.0" text="Поиск:"/>
+        <TextField fx:id="searchField" layoutX="62.0" layoutY="16.0" prefHeight="25.0" prefWidth="723.0"
+                   promptText="начните вводить ключевое слово для поиска..."/>
+    </Pane>
+    <TableView fx:id="tableView" prefHeight="600.0" prefWidth="800.0">
+      <columns>
+          <TableColumn fx:id="building" prefWidth="75.0" text="Здание" />
+          <TableColumn fx:id="floor" prefWidth="75.0" text="Этаж" />
+          <TableColumn fx:id="department" prefWidth="75.0" text="Отдел" />
+          <TableColumn fx:id="room" prefWidth="75.0" text="Кабинет" />
+          <TableColumn fx:id="place" prefWidth="75.0" text="Место" />
+          <TableColumn fx:id="jobTitle" prefWidth="75.0" text="Должность" />
+          <TableColumn fx:id="name" prefWidth="200.00006103515625" text="ФИО" />
+          <TableColumn fx:id="email" prefWidth="146.6666259765625" text="email" />
+      </columns>
+    </TableView>
+</VBox>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="428.0" prefWidth="501.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fortushin.tvc.javaFx.RegistrationPageController">
+
+    <Label fx:id="registrationLabel" layoutX="163.0" layoutY="32.0" text="Регистрация" />
+    <Label fx:id="nameLabel" layoutX="88.0" layoutY="78.0" text="ФИО:" />
+    <Label fx:id="jobTitleLabel" layoutX="88.0" layoutY="120.0" text="Должность:" />
+    <Label fx:id="emailLabel" layoutX="88.0" layoutY="165.0" text="Email:" />
+    <Label fx:id="role" layoutX="88.0" layoutY="210.0" text="Роль:" />
+    <Label fx:id="passwordLabel" layoutX="88.0" layoutY="258.0" text="Пароль:" />
+    <Label fx:id="errorLabel" layoutX="88.0" layoutY="292.0" prefHeight="63.0" prefWidth="392.0" textFill="#ef0707" />
+    <Label fx:id="successLabel" layoutX="88.0" layoutY="292.0" prefHeight="63.0" prefWidth="392.0" textFill="#006400" />
+    <TextField fx:id="nameField" layoutX="172.0" layoutY="74.0" prefHeight="25.0" prefWidth="216.0">
+      <tooltip>
+         <Tooltip text="Поле должно быть заполнено разделенными пробелами атрибутами имени человека" />
+      </tooltip></TextField>
+    <TextField fx:id="jobTitleField" layoutX="172.0" layoutY="118.0" prefHeight="25.0" prefWidth="216.0" />
+    <TextField fx:id="emailField" layoutX="172.0" layoutY="164.0" prefHeight="25.0" prefWidth="216.0" />
+    <ChoiceBox fx:id="choiceBox" layoutX="172.0" layoutY="206.0" prefHeight="25.0" prefWidth="216.0" />
+    <PasswordField fx:id="passwordField" layoutX="172.0" layoutY="254.0" prefHeight="25.0" prefWidth="216.0" />
+    <Button fx:id="registerButton" layoutX="172.0" layoutY="366.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Регистрация" />
+    <Button fx:id="returnButton" layoutX="302.0" layoutY="366.0" mnemonicParsing="false" text="Назад" />
+
+
+
+
+
+
+</AnchorPane>
