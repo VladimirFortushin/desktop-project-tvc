@@ -13,12 +13,12 @@ import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import ru.fortushin.tvc.model.User;
 import ru.fortushin.tvc.repository.UserRepository;
 import ru.fortushin.tvc.service.RegistrationService;
+import ru.fortushin.tvc.util.PageSwitcher;
 import ru.fortushin.tvc.util.UserNameToLoginConverter;
 
 import java.io.IOException;
@@ -32,15 +32,16 @@ public class RegistrationPageController implements Initializable {
     private Resource loginPageResource;
     private final RegistrationService registrationService;
     private final UserRepository userRepository;
-    private final ApplicationContext applicationContext;
+    private final PageSwitcher pageSwitcher;
     private final UserNameToLoginConverter userNameToLoginConverter;
 
     @Autowired
     public RegistrationPageController(RegistrationService registrationService, UserRepository userRepository,
-                                      ApplicationContext applicationContext, UserNameToLoginConverter userNameToLoginConverter) {
+                                      PageSwitcher pageSwitcher, UserNameToLoginConverter userNameToLoginConverter) {
         this.registrationService = registrationService;
         this.userRepository = userRepository;
-        this.applicationContext = applicationContext;
+        this.pageSwitcher = pageSwitcher;
+
         this.userNameToLoginConverter = userNameToLoginConverter;
     }
 
@@ -143,18 +144,7 @@ public class RegistrationPageController implements Initializable {
         returnButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-                    try {
-                        FXMLLoader loader = new FXMLLoader(loginPageResource.getURL());
-                        loader.setControllerFactory(applicationContext::getBean);
-                        Parent parent = loader.load();
-                        Scene nextPageScene = new Scene(parent);
-                        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        window.setScene(nextPageScene);
-                        window.show();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    pageSwitcher.goTo(event, loginPageResource);
                 }
         });
     }
