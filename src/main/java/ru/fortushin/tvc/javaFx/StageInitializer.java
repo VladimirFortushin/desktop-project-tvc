@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Component
 public class StageInitializer implements ApplicationListener<StageReadyEvent> {
-    @Value("classpath:/templates/login-page.fxml")
+    @Value("classpath:/templates/table.fxml")
     private Resource tableResource;
     private final String applicationTitle;
     private final ApplicationContext applicationContext;
@@ -37,6 +37,8 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
             Stage stage = event.getStage();
             Scene scene = new Scene(parent, 400, 300);
             stage.setScene(scene);
+            stage.sizeToScene();
+            stage.centerOnScreen();
             stage.setTitle(applicationTitle);
             stage.show();
         } catch (IOException e) {

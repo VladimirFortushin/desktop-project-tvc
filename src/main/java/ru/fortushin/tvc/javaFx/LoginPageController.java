@@ -66,7 +66,8 @@ public class LoginPageController implements Initializable {
             public void handle(ActionEvent event) {
                 String login = loginField.getText();
                 String password = passwordField.getText();
-                if(passwordEncoder.matches(password, userService.loadUserByUsername(login).getPassword())){
+                if(passwordEncoder.matches(password, userService.loadUserByUsername(login).getPassword())
+                        && userService.loadUserByUsername(login).getUsername().equals(login)){
                     pageSwitcher.goTo(event, tablePageResource);
                 }else{
                     errorLabel.setText("Invalid username or password");

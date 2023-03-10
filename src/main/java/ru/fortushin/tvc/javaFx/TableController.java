@@ -2,17 +2,23 @@ package ru.fortushin.tvc.javaFx;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import ru.fortushin.tvc.model.Employee;
 import ru.fortushin.tvc.repository.EmployeeRepository;
+import ru.fortushin.tvc.service.EmployeeService;
+import ru.fortushin.tvc.util.PageSwitcher;
+import ru.fortushin.tvc.util.TableFilter;
 
 import java.net.URL;
 import java.util.*;
@@ -20,13 +26,26 @@ import java.util.*;
 @Component
 @FxmlView
 public class TableController implements Initializable {
+    @Value("classpath:/templates/employee-data.fxml")
+    private Resource employeeDataResource;
     private final EmployeeRepository employeeRepository;
+    private final TableFilter tableFilter;
+    private final EmployeeService employeeService;
+    private final PageSwitcher pageSwitcher;
+    private final CRUDEmployeeController CRUDcontroller;
 
     @Autowired
-    public TableController(EmployeeRepository employeeRepository) {
+    public TableController(EmployeeRepository employeeRepository, TableFilter tableFilter, EmployeeService employeeService, PageSwitcher pageSwitcher, CRUDEmployeeController cruDcontroller) {
         this.employeeRepository = employeeRepository;
+        this.tableFilter = tableFilter;
+        this.employeeService = employeeService;
+        this.pageSwitcher = pageSwitcher;
+        CRUDcontroller = cruDcontroller;
     }
-
+    @FXML
+    public Button updateButton;
+    @FXML
+    public Button createButton;
     @FXML
     public TableView<Employee> tableView;
     @FXML
@@ -66,41 +85,32 @@ public class TableController implements Initializable {
 
         List<Employee> employeeList = employeeRepository.findAll();
         observableList.addAll(employeeList);
-        tableView.setItems(observableList);
 
-        FilteredList<Employee> filteredList = new FilteredList<>(observableList, p -> true);
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList.setPredicate(employeeSearchModel -> {
-                if(newValue.isEmpty() || newValue.isBlank() || newValue == null){
-                    return true;
-                }
-
-                String searchValue = newValue.toLowerCase();
-
-                if(employeeSearchModel.getName().toLowerCase().indexOf(searchValue) > -1){
-                    return true;
-                }else if(employeeSearchModel.getBuilding().toLowerCase().indexOf(searchValue) > -1){
-                    return true;
-                }else if(employeeSearchModel.getEmail().toLowerCase().indexOf(searchValue) > -1){
-                    return true;
-                }else if(employeeSearchModel.getJobTitle().toLowerCase().indexOf(searchValue) > -1){
-                    return true;
-                }else if(employeeSearchModel.getRoom().toLowerCase().indexOf(searchValue) > -1){
-                    return true;
-                }else if(employeeSearchModel.getPlace().toLowerCase().indexOf(searchValue) > -1){
-                    return true;
-                }else if(employeeSearchModel.getDepartment().toLowerCase().indexOf(searchValue) > -1){
-                    return true;
-                }else {
-                    return false;
-                }
-            });
-        });
-
-        SortedList<Employee> sortedList = new SortedList<>(filteredList);
+        SortedList<Employee> sortedList = new SortedList<>(tableFilter.getFilteredList(observableList, searchField));
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(sortedList);
 
 
+        updateButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
+                Employee selectedEmployee = tableView.getItems().get(selectedIndex);
+                CRUDcontroller.getEmployeeForUpdate(selectedEmployee);
+                pageSwitcher.goTo(event, employeeDataResource);
+
+            }
+        });
+
+        createButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Resource createEmployeePageResource;
+            }
+        });
+
+
     }
+
+
 }
