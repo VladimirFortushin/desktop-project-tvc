@@ -6,21 +6,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import ru.fortushin.tvc.model.Employee;
 import ru.fortushin.tvc.service.EmployeeService;
-import ru.fortushin.tvc.util.EmployeeNotFoundException;
+import ru.fortushin.tvc.util.PageSwitcher;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 @Component
 public class CRUDEmployeeController implements Initializable {
+    @Value("classpath:/templates/table.fxml")
+    private Resource tableResource;
     private final EmployeeService employeeService;
+    private final PageSwitcher pageSwitcher;
     private Employee employee;
     @Autowired
-    public CRUDEmployeeController(EmployeeService employeeService) {
+    public CRUDEmployeeController(EmployeeService employeeService, PageSwitcher pageSwitcher) {
         this.employeeService = employeeService;
+        this.pageSwitcher = pageSwitcher;
     }
     @FXML
     private Button backButton;
@@ -96,17 +102,22 @@ public class CRUDEmployeeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        buildingField.setText(employee.getBuilding());
-        floorField.setText(String.valueOf(employee.getFloorNumber()));
-        departmentField.setText(employee.getDepartment());
-        roomField.setText(employee.getRoom());
-        placeField.setText(employee.getPlace());
-        jobTitleField.setText(employee.getJobTitle());
-        lastNameField.setText(employee.getName().split(" ")[0]);
-        nameField.setText(employee.getName().split(" ")[1]);
-        middleNameField.setText(employee.getName().split(" ")[2]);
-        emailField.setText(employee.getEmail());
+        if(employee != null){
+            buildingField.setText(employee.getBuilding());
+            floorField.setText(String.valueOf(employee.getFloorNumber()));
+            departmentField.setText(employee.getDepartment());
+            roomField.setText(employee.getRoom());
+            placeField.setText(employee.getPlace());
+            jobTitleField.setText(employee.getJobTitle());
+            lastNameField.setText(employee.getName().split(" ")[0]);
+            nameField.setText(employee.getName().split(" ")[1]);
+            middleNameField.setText(employee.getName().split(" ")[2]);
+            emailField.setText(employee.getEmail());
+        }
 
+        backButton.setOnAction(event ->  {
+            pageSwitcher.goTo(event, tableResource);
+        });
 
         saveButton.setOnAction(event -> {
             try {
@@ -120,7 +131,7 @@ public class CRUDEmployeeController implements Initializable {
                 employee.setName(lastNameField.getText() + " " + nameField.getText() + " " + middleNameField.getText());
                 employee.setEmail(emailField.getText());
                 employeeService.updateEmployee(employee.getId(), employee);
-            }catch (EmployeeNotFoundException e){
+            }catch (NullPointerException e){
                 Employee newEmployee = new Employee(buildingField.getText(),
                         Integer.parseInt(floorField.getText()),
                         departmentField.getText(),

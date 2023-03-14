@@ -15,6 +15,8 @@ import java.io.IOException;
 
 @Component
 public class PageSwitcher {
+    private FXMLLoader loader;
+    private Scene scene;
     private final ApplicationContext applicationContext;
 
     @Autowired
@@ -24,15 +26,16 @@ public class PageSwitcher {
 
     public void goTo(ActionEvent event, Resource resource) {
         try {
-            FXMLLoader loader = new FXMLLoader(resource.getURL());
+            loader = new FXMLLoader(resource.getURL());
             loader.setControllerFactory(applicationContext::getBean);
             Parent parent = loader.load();
-            Scene nextPageScene = new Scene(parent);
+            scene = new Scene(parent);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(nextPageScene);
+            window.setScene(scene);
             window.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

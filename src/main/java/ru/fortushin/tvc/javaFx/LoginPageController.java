@@ -55,15 +55,12 @@ public class LoginPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        registrationButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
+        registrationButton.setOnAction(event ->  {
                 pageSwitcher.goTo(event, registrationPageResource);
-            }
         });
 
-        loginButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        loginButton.setOnAction(event ->  {
+
                 String login = loginField.getText();
                 String password = passwordField.getText();
                 if(passwordEncoder.matches(password, userService.loadUserByUsername(login).getPassword())
@@ -72,7 +69,6 @@ public class LoginPageController implements Initializable {
                 }else{
                     errorLabel.setText("Invalid username or password");
                 }
-            }
         });
     }
 

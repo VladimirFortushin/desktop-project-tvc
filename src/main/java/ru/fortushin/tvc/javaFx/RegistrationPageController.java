@@ -1,15 +1,8 @@
 package ru.fortushin.tvc.javaFx;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +14,6 @@ import ru.fortushin.tvc.service.RegistrationService;
 import ru.fortushin.tvc.util.PageSwitcher;
 import ru.fortushin.tvc.util.UserNameToLoginConverter;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -108,10 +100,8 @@ public class RegistrationPageController implements Initializable {
         choiceBox.getItems().add("Администратор БД");
         choiceBox.getItems().add("Пользователь");
 
-        registerButton.setOnAction(new EventHandler<ActionEvent>() {
+        registerButton.setOnAction(event ->  {
 
-            @Override
-            public void handle(ActionEvent event) {
                 errorLabel.setText("");
                 StringBuilder errorText = new StringBuilder();
                 if (!isValidEmail(emailField.getText())) {
@@ -138,14 +128,10 @@ public class RegistrationPageController implements Initializable {
                 } else {
                     errorLabel.setText(errorText.toString());
                 }
-            }
         });
 
-        returnButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                    pageSwitcher.goTo(event, loginPageResource);
-                }
+        returnButton.setOnAction(event -> {
+            pageSwitcher.goTo(event, loginPageResource);
         });
     }
 

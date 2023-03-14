@@ -3,8 +3,6 @@ package ru.fortushin.tvc.javaFx;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -47,13 +45,14 @@ public class TableController implements Initializable {
     @FXML
     public Button createButton;
     @FXML
+    public Button deleteButton;
+    @FXML
     public TableView<Employee> tableView;
     @FXML
     public Label searchLabel;
     @FXML
     public TextField searchField;
-    @FXML
-    public ObservableList<Employee> observableList = FXCollections.observableArrayList();
+
     @FXML
     public TableColumn<Employee, String> building;
     @FXML
@@ -83,33 +82,35 @@ public class TableController implements Initializable {
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         email.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        List<Employee> employeeList = employeeRepository.findAll();
-        observableList.addAll(employeeList);
-
-        SortedList<Employee> sortedList = new SortedList<>(tableFilter.getFilteredList(observableList, searchField));
-        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
-        tableView.setItems(sortedList);
+        refreshTable();
 
 
-        updateButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        deleteButton.setOnAction(event -> {
+            int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
+            Employee employeeForDeletion = tableView.getItems().get(selectedIndex);
+            employeeService.deleteEmployee(employeeForDeletion);
+            refreshTable();
+            tableView.refresh();
+        });
+
+        updateButton.setOnAction(event -> {
                 int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
                 Employee selectedEmployee = tableView.getItems().get(selectedIndex);
                 CRUDcontroller.getEmployeeForUpdate(selectedEmployee);
                 pageSwitcher.goTo(event, employeeDataResource);
-
-            }
         });
 
-        createButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Resource createEmployeePageResource;
-            }
+        createButton.setOnAction(event -> {
+           pageSwitcher.goTo(event, employeeDataResource);
         });
+    }
+    private void refreshTable(){
+        List<Employee> employeeList = employeeRepository.findAll();
+        ObservableList<Employee> observableList = FXCollections.observableList(employeeList);
 
-
+        SortedList<Employee> sortedList = new SortedList<>(tableFilter.getFilteredList(observableList, searchField));
+        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+        tableView.setItems(sortedList);
     }
 
 
