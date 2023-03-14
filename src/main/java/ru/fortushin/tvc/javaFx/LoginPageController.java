@@ -1,7 +1,5 @@
 package ru.fortushin.tvc.javaFx;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -22,12 +20,14 @@ public class LoginPageController implements Initializable {
     private Resource registrationPageResource;
     @Value("classpath:/templates/table.fxml")
     private Resource tablePageResource;
+    private final TableController tableController;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final PageSwitcher pageSwitcher;
 
     @Autowired
-    public LoginPageController(PasswordEncoder passwordEncoder, UserService userService, PageSwitcher pageSwitcher) {
+    public LoginPageController(TableController tableController, PasswordEncoder passwordEncoder, UserService userService, PageSwitcher pageSwitcher) {
+        this.tableController = tableController;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.pageSwitcher = pageSwitcher;
@@ -65,11 +65,15 @@ public class LoginPageController implements Initializable {
                 String password = passwordField.getText();
                 if(passwordEncoder.matches(password, userService.loadUserByUsername(login).getPassword())
                         && userService.loadUserByUsername(login).getUsername().equals(login)){
+                    tableController.getAuthorities(userService.loadUserByUsername(login).getAuthorities().toString());
                     pageSwitcher.goTo(event, tablePageResource);
                 }else{
                     errorLabel.setText("Invalid username or password");
                 }
+
         });
+
+
     }
 
 

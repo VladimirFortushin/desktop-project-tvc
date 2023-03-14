@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Component
 public class StageInitializer implements ApplicationListener<StageReadyEvent> {
-    @Value("classpath:/templates/table.fxml")
+    @Value("classpath:/templates/login-page.fxml")
     private Resource tableResource;
     private final String applicationTitle;
     private final ApplicationContext applicationContext;

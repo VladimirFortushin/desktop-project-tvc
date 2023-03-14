@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import ru.fortushin.tvc.model.Employee;
 import ru.fortushin.tvc.repository.EmployeeRepository;
 import ru.fortushin.tvc.service.EmployeeService;
+import ru.fortushin.tvc.service.UserService;
 import ru.fortushin.tvc.util.PageSwitcher;
 import ru.fortushin.tvc.util.TableFilter;
 
@@ -30,6 +31,7 @@ public class TableController implements Initializable {
     private final TableFilter tableFilter;
     private final EmployeeService employeeService;
     private final PageSwitcher pageSwitcher;
+    private String role;
     private final CRUDEmployeeController CRUDcontroller;
 
     @Autowired
@@ -38,7 +40,7 @@ public class TableController implements Initializable {
         this.tableFilter = tableFilter;
         this.employeeService = employeeService;
         this.pageSwitcher = pageSwitcher;
-        CRUDcontroller = cruDcontroller;
+        this.CRUDcontroller = cruDcontroller;
     }
     @FXML
     public Button updateButton;
@@ -69,9 +71,18 @@ public class TableController implements Initializable {
     public TableColumn<Employee, String> name;
     @FXML
     public TableColumn<Employee, String> email;
+    public void getAuthorities(String role){
+        this.role = role;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        updateButton.setDisable(!role.contains("ROLE_ADMIN"));
+        createButton.setDisable(!role.contains("ROLE_ADMIN"));
+        deleteButton.setDisable(!role.contains("ROLE_ADMIN"));
+
+
 
         building.setCellValueFactory(new PropertyValueFactory<>("building"));
         floor.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("floorNumber"));
@@ -86,6 +97,7 @@ public class TableController implements Initializable {
 
 
         deleteButton.setOnAction(event -> {
+
             int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
             Employee employeeForDeletion = tableView.getItems().get(selectedIndex);
             employeeService.deleteEmployee(employeeForDeletion);
@@ -112,6 +124,8 @@ public class TableController implements Initializable {
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(sortedList);
     }
+
+
 
 
 }

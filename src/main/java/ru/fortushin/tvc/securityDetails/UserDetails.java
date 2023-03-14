@@ -1,7 +1,10 @@
 package ru.fortushin.tvc.securityDetails;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 import ru.fortushin.tvc.model.User;
 
 import java.util.Collection;
